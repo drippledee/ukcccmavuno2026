@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UoN Mavuno 2026 Fundraiser Campaign Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mpesaGreen: '#00A15D',
+                        mpesaDarkGreen: '#007A45',
+                        mpesaLight: '#E8F5E9'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Top Navigation / Header -->
+    <header class="bg-mpesaGreen text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-2 md:mb-0">
+                <div class="bg-white text-mpesaGreen p-2.5 rounded-full shadow-md">
+                    <i class="fa-solid fa-hands-holding-child text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">UoN MAVUNO 2026</h1>
+                    <p class="text-xs text-emerald-100">St. Joseph Bible Study Group | Campaign Tracker</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="bg-emerald-800 bg-opacity-60 px-4 py-2 rounded-lg text-xs border border-emerald-600 flex items-center space-x-2">
+                    <i class="fa-solid fa-bullseye text-yellow-300"></i>
+                    <span>Target: <strong class="text-white">KES 350,000</strong></span>
+                </div>
+                <button onclick="openModal()" class="bg-white text-mpesaGreen font-semibold px-4 py-2 rounded-lg shadow hover:bg-emerald-50 transition text-sm flex items-center space-x-2">
+                    <i class="fa-solid fa-plus-circle"></i>
+                    <span>Log Contribution</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+
+        <!-- Hero Thermometer & Overview Cards -->
+        <section class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b pb-4 gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Campaign Overview & Progress</h2>
+                    <p class="text-sm text-gray-500">Official Event Date: <span class="font-semibold text-mpesaGreen">November 28, 2026</span></p>
+                </div>
+                <div class="bg-mpesaLight text-mpesaDarkGreen px-4 py-2 rounded-xl text-sm font-medium border border-emerald-200 flex items-center space-x-2">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span>Pochi La Biashara: <strong class="text-gray-900">0769879143</strong></span>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-gradient-to-br from-emerald-50 to-white p-4 rounded-xl border border-emerald-100 shadow-sm">
+                    <p class="text-xs font-semibold text-gray-500 uppercase">Total Raised</p>
+                    <h3 id="statTotalRaised" class="text-2xl font-bold text-mpesaGreen mt-1">KES 0</h3>
+                    <p class="text-xs text-emerald-700 mt-1"><i class="fa-solid fa-arrow-trend-up"></i> Verified & Pochi</p>
+                </div>
+                <div class="bg-gradient-to-br from-blue-50 to-white p-4 rounded-xl border border-blue-100 shadow-sm">
+                    <p class="text-xs font-semibold text-gray-500 uppercase">Remaining Balance</p>
+                    <h3 id="statRemaining" class="text-2xl font-bold text-blue-600 mt-1">KES 350,000</h3>
+                    <p class="text-xs text-blue-700 mt-1"><i class="fa-solid fa-clock"></i> To reach KES 350k</p>
+                </div>
+                <div class="bg-gradient-to-br from-amber-50 to-white p-4 rounded-xl border border-amber-100 shadow-sm">
+                    <p class="text-xs font-semibold text-gray-500 uppercase">Car Wash Progress</p>
+                    <h3 id="statCarWash" class="text-2xl font-bold text-amber-600 mt-1">KES 0 / 20k</h3>
+                    <p class="text-xs text-amber-700 mt-1"><i class="fa-solid fa-car"></i> Target: KES 20,000</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-50 to-white p-4 rounded-xl border border-purple-100 shadow-sm">
+                    <p class="text-xs font-semibold text-gray-500 uppercase">Countdown</p>
+                    <h3 class="text-2xl font-bold text-purple-600 mt-1">Nov 28, '26</h3>
+                    <p class="text-xs text-purple-700 mt-1"><i class="fa-solid fa-calendar-days"></i> Main Event Date</p>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div>
+                <div class="flex justify-between text-sm font-semibold mb-1">
+                    <span class="text-gray-700">Overall Campaign Goal</span>
+                    <span id="progressPercentage" class="text-mpesaGreen">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden shadow-inner">
+                    <div id="progressBar" class="bg-mpesaGreen h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- On-Ground Activities & Special Drives -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Car Wash Card -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-900 flex items-center space-x-2">
+                        <i class="fa-solid fa-car text-amber-500"></i>
+                        <span>Campus Car Wash Activity</span>
+                    </h3>
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-semibold">Target: KES 20,000</span>
+                </div>
+                <p class="text-sm text-gray-500 mb-4">On-ground car wash fundraising initiative conducted on campus.</p>
+                <div class="flex justify-between items-center bg-gray-50 p-4 rounded-xl">
+                    <div>
+                        <p class="text-xs text-gray-500">Raised so far:</p>
+                        <p id="carWashRaisedDisplay" class="text-xl font-bold text-gray-900">KES 0</p>
+                    </div>
+                    <button onclick="openModalWithCategory('Car Wash')" class="bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-600 transition shadow-sm">
+                        Add Car Wash Funds
+                    </button>
+                </div>
+            </div>
+
+            <!-- Raffle Tickets Card -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-900 flex items-center space-x-2">
+                        <i class="fa-solid fa-ticket text-purple-500"></i>
+                        <span>Raffle Ticket Blitz</span>
+                    </h3>
+                    <span class="bg-purple-100 text-purple-800 text-xs px-2.5 py-1 rounded-full font-semibold">Special Drive</span>
+                </div>
+                <p class="text-sm text-gray-500 mb-4">Ticket sales and community raffle draws for Mavuno 2026.</p>
+                <div class="flex justify-between items-center bg-gray-50 p-4 rounded-xl">
+                    <div>
+                        <p class="text-xs text-gray-500">Total Raffle Proceeds:</p>
+                        <p id="raffleRaisedDisplay" class="text-xl font-bold text-gray-900">KES 0</p>
+                    </div>
+                    <button onclick="openModalWithCategory('Raffle Tickets')" class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-700 transition shadow-sm">
+                        Add Raffle Funds
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Isolated SCC Standings -->
+        <section class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                <div class="bg-emerald-100 text-mpesaGreen p-2 rounded-lg">
+                    <i class="fa-solid fa-church"></i>
+                </div>
+                <span>Bible Study Groups (SCC Standings)</span>
+            </h3>
+            <p class="text-xs text-gray-500 mb-4">Independent SCC group standings separated from individual member ledger contributions.</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="sccGrid">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+        <!-- Leadership & Cohorts Summary -->
+        <section class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+                <div class="bg-blue-100 text-blue-600 p-2 rounded-lg">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <span>Leadership & Cohorts Target Summary</span>
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <h4 class="font-bold text-gray-800 text-sm">Executive Committee</h4>
+                    <p class="text-xs text-gray-500 mt-1">Target: KES 3,000 per person (6 members)</p>
+                    <p id="execSummary" class="text-lg font-bold text-mpesaGreen mt-2">KES 0</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <h4 class="font-bold text-gray-800 text-sm">Student Council</h4>
+                    <p class="text-xs text-gray-500 mt-1">Target: KES 2,000 per person (~15 members)</p>
+                    <p id="councilSummary" class="text-lg font-bold text-mpesaGreen mt-2">KES 0</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <h4 class="font-bold text-gray-800 text-sm">General Members & Cohorts</h4>
+                    <p class="text-xs text-gray-500 mt-1">Target: KES 1,000 per person (Classes 2027-2030)</p>
+                    <p id="memberSummary" class="text-lg font-bold text-mpesaGreen mt-2">KES 0</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Master Filterable Member Ledger Table -->
+        <section class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900">Member Contributions Ledger</h3>
+                    <p class="text-xs text-gray-500">Tracks name, date contributed, amount, and fulfillment status across all classes.</p>
+                </div>
+                <div class="flex items-center space-x-3 w-full md:w-auto">
+                    <div class="relative w-full md:w-64">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                            <i class="fa-solid fa-search"></i>
+                        </span>
+                        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search member name..." class="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-mpesaGreen">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider border-b border-gray-200">
+                            <th class="py-3 px-4">#</th>
+                            <th class="py-3 px-4">Name</th>
+                            <th class="py-3 px-4">Cohort / Role</th>
+                            <th class="py-3 px-4">Date Contributed</th>
+                            <th class="py-3 px-4">Amount (KES)</th>
+                            <th class="py-3 px-4">Target (KES)</th>
+                            <th class="py-3 px-4">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="memberTableBody" class="text-sm divide-y divide-gray-100">
+                        <!-- Populated via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12 py-6 text-center text-xs text-gray-500">
+        <p>UoN Mavuno 2026 Fundraiser Campaign Dashboard | St. Joseph Bible Study Group</p>
+        <p class="mt-1">Send contributions through Pochi La Biashara: <strong class="text-mpesaGreen">0769879143</strong></p>
+    </footer>
+
+    <!-- Log Contribution Modal -->
+    <div id="contributionModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative animate-fade-in">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Log Contribution / Revenue</h3>
+            <p class="text-xs text-gray-500 mb-4">Record funds received via Pochi La Biashara (0769879143) or cash.</p>
+            
+            <form id="contributionForm" onsubmit="handleContributionSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Category / Source Type</label>
+                    <select id="modalCategory" class="w-full p-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-mpesaGreen">
+                        <option value="Member">Member Contribution</option>
+                        <option value="Car Wash">Campus Car Wash</option>
+                        <option value="Raffle Tickets">Raffle Ticket Blitz</option>
+                        <option value="SCC">SCC Group Standings</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Contributor / Item Name</label>
+                    <input type="text" id="modalName" required placeholder="e.g. Adrian Poghisho or Car Wash proceeds" class="w-full p-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-mpesaGreen">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Amount (KES)</label>
+                    <input type="number" id="modalAmount" required min="1" placeholder="e.g. 1000" class="w-full p-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-mpesaGreen">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 uppercase mb-1">Date</label>
+                    <input type="date" id="modalDate" required class="w-full p-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-mpesaGreen">
+                </div>
+                <div class="pt-2 flex space-x-3">
+                    <button type="button" onclick="closeModal()" class="w-1/2 bg-gray-100 text-gray-700 py-2.5 rounded-xl font-semibold text-sm hover:bg-gray-200 transition">Cancel</button>
+                    <button type="submit" class="w-1/2 bg-mpesaGreen text-white py-2.5 rounded-xl font-semibold text-sm hover:bg-mpesaDarkGreen transition shadow">Confirm & Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // Campaign Target
+        const CAMPAIGN_TARGET = 350000;
+
+        // SCC Groups Data
+        let sccData = [
+            { name: "St. Peter", raised: 0, target: 15000 },
+            { name: "St. Augustine", raised: 0, target: 15000 },
+            { name: "St. Bhakita", raised: 0, target: 15000 },
+            { name: "St. Maria Goreti", raised: 0, target: 15000 },
+            { name: "St. Joseph", raised: 0, target: 15000 },
+            { name: "UKCC Football Club", raised: 0, target: 10000 },
+            { name: "Mavuno Committee", raised: 0, target: 20000 }
+        ];
+
+        // On-Ground Activities
+        let activitiesData = {
+            carWash: { raised: 0, target: 20000 },
+            raffle: { raised: 0, target: 15000 }
+        };
+
+        // Complete Member Roster
+        let membersData = [
+            // Class of 2027 - Executive
+            { name: "James Kuria", cohort: "Class 2027 (Exec)", date: "2026-08-10", amount: 3000, target: 3000 },
+            { name: "Vivian Ong'ondo", cohort: "Class 2027 (Exec)", date: "2026-08-12", amount: 700, target: 3000 },
+            { name: "Faith Kosgei", cohort: "Class 2027 (Exec)", date: "2026-08-15", amount: 100, target: 3000 },
+            // Class of 2027 - Council
+            { name: "Dennis Otieno", cohort: "Class 2027 (Council)", date: "2026-08-14", amount: 350, target: 2000 },
+            { name: "Nancy Nyakieni", cohort: "Class 2027 (Council)", date: "-", amount: 0, target: 2000 },
+            { name: "Jepchumba Irene", cohort: "Class 2027 (Council)", date: "2026-08-18", amount: 1000, target: 2000 },
+            // Class of 2027 - Members
+            { name: "Emily Mwongeli", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Daisy Khaemba", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Faith Mutheu", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Siegfried Njoroge", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Sharon Mabeya", cohort: "Class 2027 (Member)", date: "2026-08-20", amount: 100, target: 1000 },
+            { name: "Faith Kiindu", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Hannah Gitau", cohort: "Class 2027 (Member)", date: "2026-08-22", amount: 1000, target: 1000 },
+            { name: "Mary Wambui", cohort: "Class 2027 (Member)", date: "2026-08-23", amount: 100, target: 1000 },
+            { name: "Tess Ndunge", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Steve Okoth", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Steve Gitonga", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Collins Otieno", cohort: "Class 2027 (Member)", date: "2026-08-25", amount: 600, target: 1000 },
+            { name: "Faith Ng'ang'a", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Vicky Kinja", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Risper Wangari", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Pauline Murguiya", cohort: "Class 2027 (Member)", date: "2026-08-26", amount: 1000, target: 1000 },
+            { name: "Stanley Obiri", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Simon", cohort: "Class 2027 (Member)", date: "2026-08-27", amount: 100, target: 1000 },
+            { name: "Roy", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Kedrick", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Myrra Cherotich", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Norbet Yonga", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Emmanuel Sukutu", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Dominic Munka", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Antonita Makori", cohort: "Class 2027 (Member)", date: "2026-08-28", amount: 1000, target: 1000 },
+            { name: "Miriam Chela", cohort: "Class 2027 (Member)", date: "2026-08-29", amount: 100, target: 1000 },
+            { name: "Mark Rooney", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Geoffrey Gachanja", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Sean Michael", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Gaitano Pesa", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Brian Kigen", cohort: "Class 2027 (Member)", date: "-", amount: 0, target: 1000 },
+
+            // Class of 2028 - Executive
+            { name: "Adrian Poghisho", cohort: "Class 2028 (Exec)", date: "2026-09-01", amount: 600, target: 3000 },
+            { name: "Sharon Maiga", cohort: "Class 2028 (Exec)", date: "2026-09-02", amount: 8000, target: 3000 },
+            { name: "Phelix Ochieng", cohort: "Class 2028 (Exec)", date: "2026-09-03", amount: 3000, target: 3000 },
+            // Class of 2028 - Council
+            { name: "Laura Kiptoo", cohort: "Class 2028 (Council)", date: "2026-09-04", amount: 900, target: 2000 },
+            { name: "Therese Ndunge", cohort: "Class 2028 (Council)", date: "2026-09-05", amount: 800, target: 2000 },
+            { name: "Hillary Juma", cohort: "Class 2028 (Council)", date: "-", amount: 0, target: 2000 },
+            { name: "Joyce Njiru", cohort: "Class 2028 (Council)", date: "2026-09-06", amount: 500, target: 2000 },
+            { name: "Mary Kei", cohort: "Class 2028 (Council)", date: "2026-09-07", amount: 1000, target: 2000 },
+            // Class of 2028 - Members
+            { name: "Paul Omondi", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Laban Jayden", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Hillary Karani", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Nancy Wanjiku", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Ruth Nanjala", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Loise Kariuki", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Eric Muirigi", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "January Maina", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Zecharia Chacher", cohort: "Class 2028 (Member)", date: "2026-09-08", amount: 100, target: 1000 },
+            { name: "Phenny Akinyi", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Marion Mukami", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Augustine Musyoka", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Celestine Ndolo", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Regina", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Sarah Longole", cohort: "Class 2028 (Member)", date: "2026-09-09", amount: 200, target: 1000 },
+            { name: "Biski", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Ann Otsieno", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Joseck Samuel", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Nicholas Shamamwa", cohort: "Class 2028 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Phosteen", cohort: "Class 2028 (Member)", date: "2026-09-10", amount: 600, target: 1000 },
+
+            // Class of 2029 - Council
+            { name: "Joseph Wambesha", cohort: "Class 2029 (Council)", date: "2026-09-11", amount: 3200, target: 2000 },
+            { name: "Rick Nyakoe", cohort: "Class 2029 (Council)", date: "-", amount: 0, target: 2000 },
+            { name: "Benedict Kariuki", cohort: "Class 2029 (Council)", date: "2026-09-12", amount: 1400, target: 2000 },
+            { name: "Christine Mukethe", cohort: "Class 2029 (Council)", date: "2026-09-13", amount: 1000, target: 2000 },
+            { name: "Patience Gathoni", cohort: "Class 2029 (Council)", date: "-", amount: 0, target: 2000 },
+            // Class of 2029 - Members
+            { name: "Ann Waithera", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Abigail Cherotich", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Mary Ann", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Shawn", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Austin", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Sabina", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Mitchell", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Rosalia", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Elvis", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Richard", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Yvonne", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Grace", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Elizabeth Maina", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Ian Kemutai", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Saline Adero", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+            { name: "Gloria Cherwon", cohort: "Class 2029 (Member)", date: "2026-09-14", amount: 1000, target: 1000 },
+            { name: "Edward", cohort: "Class 2029 (Member)", date: "-", amount: 0, target: 1000 },
+
+            // Class of 2030 (First Years)
+            { name: "Chad Israil", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Vivian Moraa", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Caleb Kiprono", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Castro", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Mitchel Norah", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Claire", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Clara", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Daniel", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Davidstone", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Diana", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Dylan", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Ephie Joy", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Florence", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Irene Munyotu", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Joy", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Juliet", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Laurent", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Maureen Macharia", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Martin", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Steve Mbugua", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Melissa", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Mercy Anyango", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Muthoka", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Chris Mutuku", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Polycarp Nyakundi", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Omondi", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Otieno", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Peter", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Sylvia", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Tracy Jepkoech", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Geoffrey", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 },
+            { name: "Beatrice", cohort: "Class 2030 (First Year)", date: "-", amount: 0, target: 1000 }
+        ];
+
+        // Render Dashboard
+        function renderDashboard() {
+            // Calculate totals
+            let memberTotal = membersData.reduce((sum, m) => sum + m.amount, 0);
+            let sccTotal = sccData.reduce((sum, s) => sum + s.raised, 0);
+            let activityTotal = activitiesData.carWash.raised + activitiesData.raffle.raised;
+            let grandTotal = memberTotal + sccTotal + activityTotal;
+
+            let remaining = Math.max(0, CAMPAIGN_TARGET - grandTotal);
+            let percentage = Math.min(100, Math.round((grandTotal / CAMPAIGN_TARGET) * 100));
+
+            // Update stats
+            document.getElementById('statTotalRaised').innerText = `KES ${grandTotal.toLocaleString()}`;
+            document.getElementById('statRemaining').innerText = `KES ${remaining.toLocaleString()}`;
+            document.getElementById('statCarWash').innerText = `KES ${activitiesData.carWash.raised.toLocaleString()} / 20k`;
+            document.getElementById('carWashRaisedDisplay').innerText = `KES ${activitiesData.carWash.raised.toLocaleString()}`;
+            document.getElementById('raffleRaisedDisplay').innerText = `KES ${activitiesData.raffle.raised.toLocaleString()}`;
+
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+            document.getElementById('progressPercentage').innerText = `${percentage}%`;
+
+            // Leadership summaries
+            let execTotal = membersData.filter(m => m.cohort.includes('Exec')).reduce((s, m) => s + m.amount, 0);
+            let councilTotal = membersData.filter(m => m.cohort.includes('Council')).reduce((s, m) => s + m.amount, 0);
+            let generalTotal = membersData.filter(m => m.cohort.includes('Member') || m.cohort.includes('First Year')).reduce((s, m) => s + m.amount, 0);
+
+            document.getElementById('execSummary').innerText = `KES ${execTotal.toLocaleString()}`;
+            document.getElementById('councilSummary').innerText = `KES ${councilTotal.toLocaleString()}`;
+            document.getElementById('memberSummary').innerText = `KES ${generalTotal.toLocaleString()}`;
+
+            // Render SCC Grid
+            let sccContainer = document.getElementById('sccGrid');
+            sccContainer.innerHTML = sccData.map(s => `
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <h5 class="font-bold text-gray-800 text-sm">${s.name}</h5>
+                        <p class="text-xs text-gray-500 mt-0.5">Target: KES ${s.target.toLocaleString()}</p>
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-base font-bold text-mpesaGreen">KES ${s.raised.toLocaleString()}</p>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                            <div class="bg-mpesaGreen h-1.5 rounded-full" style="width: ${Math.min(100, (s.raised/s.target)*100)}%"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Member Table
+            let tableBody = document.getElementById('memberTableBody');
+            tableBody.innerHTML = membersData.map((m, index) => {
+                let statusBadge = m.amount >= m.target 
+                    ? `<span class="bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full text-xs font-semibold">Goal Reached</span>`
+                    : m.amount > 0 
+                    ? `<span class="bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full text-xs font-semibold">Partial</span>`
+                    : `<span class="bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full text-xs font-semibold">Pending</span>`;
+
+                return `
+                    <tr class="hover:bg-gray-50 transition border-b border-gray-50">
+                        <td class="py-3 px-4 text-xs text-gray-400">${index + 1}</td>
+                        <td class="py-3 px-4 font-semibold text-gray-900">${m.name}</td>
+                        <td class="py-3 px-4 text-xs text-gray-500">${m.cohort}</td>
+                        <td class="py-3 px-4 text-xs text-gray-500">${m.date}</td>
+                        <td class="py-3 px-4 font-bold text-mpesaGreen">KES ${m.amount.toLocaleString()}</td>
+                        <td class="py-3 px-4 text-xs text-gray-500">KES ${m.target.toLocaleString()}</td>
+                        <td class="py-3 px-4">${statusBadge}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Filter Table Function
+        function filterTable() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let rows = document.getElementById('memberTableBody').getElementsByTagName('tr');
+            for (let i = 0; i < rows.length; i++) {
+                let nameCell = rows[i].getElementsByTagName('td')[1];
+                if (nameCell) {
+                    let text = nameCell.textContent || nameCell.innerText;
+                    rows[i].style.display = text.toLowerCase().indexOf(input) > -1 ? "" : "none";
+                }
+            }
+        }
+
+        // Modal Functions
+        function openModal() {
+            document.getElementById('contributionModal').classList.remove('hidden');
+            document.getElementById('modalDate').valueAsDate = new Date();
+        }
+
+        function openModalWithCategory(cat) {
+            openModal();
+            document.getElementById('modalCategory').value = cat === 'Car Wash' ? 'Car Wash' : 'Raffle Tickets';
+            document.getElementById('modalName').value = cat === 'Car Wash' ? 'Car Wash Proceeds' : 'Raffle Ticket Sales';
+        }
+
+        function closeModal() {
+            document.getElementById('contributionModal').classList.add('hidden');
+            document.getElementById('contributionForm').reset();
+        }
+
+        function handleContributionSubmit(event) {
+            event.preventDefault();
+            let category = document.getElementById('modalCategory').value;
+            let name = document.getElementById('modalName').value;
+            let amount = parseFloat(document.getElementById('modalAmount').value);
+            let date = document.getElementById('modalDate').value;
+
+            if (category === 'Car Wash') {
+                activitiesData.carWash.raised += amount;
+            } else if (category === 'Raffle Tickets') {
+                activitiesData.raffle.raised += amount;
+            } else if (category === 'SCC') {
+                let foundScc = sccData.find(s => s.name.toLowerCase() === name.toLowerCase());
+                if (foundScc) {
+                    foundScc.raised += amount;
+                } else {
+                    sccData.push({ name: name, raised: amount, target: 10000 });
+                }
+            } else {
+                // Find member or add as new
+                let member = membersData.find(m => m.name.toLowerCase() === name.toLowerCase());
+                if (member) {
+                    member.amount += amount;
+                    member.date = date;
+                } else {
+                    membersData.unshift({
+                        name: name,
+                        cohort: "General Contributor",
+                        date: date,
+                        amount: amount,
+                        target: 1000
+                    });
+                }
+            }
+
+            renderDashboard();
+            closeModal();
+            alert(`Successfully recorded KES ${amount.toLocaleString()} for ${name}!`);
+        }
+
+        // Initial render on load
+        window.onload = renderDashboard;
+    </script>
+</body>
+</html>
